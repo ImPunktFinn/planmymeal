@@ -1,0 +1,36 @@
+/* Container */
+#calendarCardCompenent {
+    display: flex;
+    flex-wrap: wrap; /* Karten umbrechen, wenn nötig */
+    justify-content: center; /* zentriert in Zeilen */
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Einzelne Karte */
+.calendarCard {
+    width: 300px; /* feste, angenehme Breite */
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease;
+    background-color: #fff;
+}
+
+.calendarCard:hover {
+    transform: scale(1.02);
+}
+
+/* Textinhalt */
+.calendarCard .MuiCardContent-root {
+    padding: 16px;
+}
+
+/* Button-Bereich */
+.cardActions {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 16px;
+}
