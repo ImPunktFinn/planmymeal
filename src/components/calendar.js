@@ -47,7 +47,7 @@ export default function Calendar() {
                 currentSection = 'ingredients';
             } else if (/^\*\*Zubereitungsschritte:\*\*/i.test(line)) {
                 currentSection = 'steps';
-            } else if (/^\*\*Nährwertangaben/i.test(line)) {
+            } else if (/^\*\*Nährwertangaben:\*\*/i.test(line)) {
                 currentSection = 'nutrition';
             } else if (/^\*\*(.+)\*\*/.test(line)) {
                 currentSection = 'title';
@@ -118,7 +118,7 @@ export default function Calendar() {
                 <CardActions className="cardActions">
                     <Button
                         id={`create-recipe-button-${index}`}
-                        variant="contained"
+                        class="createRecipeButton"
                         onClick={() => handleCreateRecipe(day, index)}
                     >
                         Create Recipe

@@ -2,7 +2,6 @@
 import OpenAI from 'openai';
 
 const GROQ_API_KEY = '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';
-const ENGINE_ID = 'mistral-7b-instruct'; // Beispiel-Engine
 
 export async function generateRecipe(day) {
     try {
@@ -17,7 +16,17 @@ export async function generateRecipe(day) {
             messages: [
                 {
                     role: 'user',
-                    content: `Erstelle ein Rezept für den ${day} mit folgender Struktur: 1. Titel des Rezepts, 2. Zutaten (mit Mengenangaben), 3. Zubereitungsschritte (nummeriert), 4. (Optional) Nährwertangaben.`,
+                    content: `Erstelle ein Rezept für den ${day} mit folgender Struktur:
+                    **Titel:** [Rezeptname]
+                    **Zutaten:**
+                    - [Zutat 1]
+                    - [Zutat 2]
+                    - [Zutat ...]
+                    **Zubereitungsschritte:**
+                    1. [Schritt 1]
+                    2. [Schritt 2]
+                    3. [Schritt ...]
+                    **Nährwertangaben:** [Kalorien, Proteine, Fette, Kohlenhydrate]`,
                 },
             ],
         });
