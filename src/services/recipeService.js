@@ -1,18 +1,18 @@
-
+// src/services/recipeService.js
 import OpenAI from 'openai';
 
-const GROQ_API_KEY = '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';
+const GROQ_API_KEY = process.env.REACT_APP_GROQ_API_KEY;
 
 export async function generateRecipe(day) {
     try {
         const client = new OpenAI({
             apiKey: GROQ_API_KEY,
-            dangerouslyAllowBrowser: true, // Nur für Browser-Umgebungen
+            dangerouslyAllowBrowser: true,
             baseURL: "https://api.groq.com/openai/v1"
         });
 
         const response = await client.chat.completions.create({
-            model: "llama-3.3-70b-versatile", // Beispielmodell
+            model: "llama-3.3-70b-versatile",
             messages: [
                 {
                     role: 'user',
