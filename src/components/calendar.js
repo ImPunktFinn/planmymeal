@@ -28,6 +28,7 @@ export default function Calendar() {
         const recipe = await generateRecipe(day.name);
         setRecipes((prev) => ({ ...prev, [index]: recipe }));
     };
+
     const formatRecipe = (response) => {
         if (!response) return null;
 
@@ -49,7 +50,8 @@ export default function Calendar() {
                 currentSection = 'steps';
             } else if (/^\*\*Nährwertangaben:\*\*/i.test(line)) {
                 currentSection = 'nutrition';
-            } else if (/^\*\*(.+)\*\*/.test(line)) {
+            } else if (/^\*\*(.+)\*\*/.test(line) && currentSection === '') {
+                // Nur den ersten Abschnitt als Titel interpretieren
                 currentSection = 'title';
                 sections.title = line.replace(/^\*\*(.+)\*\*/, '$1').trim();
             } else {
@@ -63,69 +65,126 @@ export default function Calendar() {
             }
         }
 
-        return (
-            <div>
-                {sections.title && <h3>{sections.title}</h3>}
-
-                {sections.ingredients.length > 0 && (
-                    <>
-                        <strong>Zutaten:</strong>
-                        <ul>
-                            {sections.ingredients.map((item, index) => (
-                                <li key={index}>{item}</li>
-                            ))}
-                        </ul>
-                    </>
-                )}
-
-                {sections.steps.length > 0 && (
-                    <>
-                        <strong>Zubereitungsschritte:</strong>
-                        <ol>
-                            {sections.steps.map((step, index) => (
-                                <li key={index}>{step}</li>
-                            ))}
-                        </ol>
-                    </>
-                )}
-
-                {sections.nutrition && (
-                    <>
-                        <strong>Nährwertangaben:</strong>
-                        <p>{sections.nutrition.trim()}</p>
-                    </>
-                )}
-            </div>
-        );
+        return sections;
     };
-
 
     const renderCards = () => {
         const weekDays = getWeekDays();
-        return weekDays.map((day, index) => (
-            <Card key={index} className="calendarCard">
-                <CardContent>
-                    <Typography variant="h6">
-                        {day.name} - {day.date}
-                    </Typography>
-                    <Typography component="div">
-                        {recipes[index]
-                            ? formatRecipe(recipes[index])
-                            : <Typography>Calendar component is under construction. Please check back later!</Typography>}
+        return weekDays.map((day, index) => {
+            const recipe = recipes[index] ? formatRecipe(recipes[index]) : null;
 
-                    </Typography>
-                </CardContent>
-                <CardActions className="cardActions">
-                    <Button
-                        id={`create-recipe-button-${index}`}
-                        class="createRecipeButton"
-                        onClick={() => handleCreateRecipe(day, index)}
-                    >
-                        Create Recipe
-                    </Button>
-                </CardActions>
-            </Card>
-        ));
+            const handleOpenInNewTab = () => {
+                if (recipe) {
+                    const newTab = window.open();
+                    newTab.document.write(`
+                        <html>
+    <head>
+        <title>${recipe.title}</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background-color: #f9f9f9;
+                color: #333;
+            }
+            h1 {
+                color: #2e7d32; /* Grüner Farbton passend zum Projekt */
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            strong {
+                display: block;
+                margin-top: 20px;
+                font-size: 1.2em;
+                color: #2e7d32;
+            }
+            ul, ol {
+                margin: 10px 0;
+                padding-left: 20px;
+            }
+            ul li, ol li {
+                margin-bottom: 5px;
+            }
+            p {
+                margin-top: 10px;
+                font-size: 1em;
+                line-height: 1.5;
+            }
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+                background: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>${recipe.title}</h1>
+            <strong>Zutaten:</strong>
+            <ul>
+                ${recipe.ingredients.map(item => `<li>${item}</li>`).join('')}
+            </ul>
+            <strong>Zubereitungsschritte:</strong>
+            <ol>
+                ${recipe.steps.map(step => `<li>${step}</li>`).join('')}
+            </ol>
+            <strong>Nährwertangaben:</strong>
+            <p>${recipe.nutrition.trim()}</p>
+        </div>
+    </body>
+</html>
+                    `);
+                    newTab.document.close();
+                }
+            };
+
+            return (
+                <Card key={index} className="calendarCard">
+                    <CardContent>
+                        <Typography variant="h6">
+                            {day.name} - {day.date}
+                        </Typography>
+                        <Typography component="div">
+                            {recipe ? <h3>{recipe.title}</h3> : <Typography>Für diesen Tag wurde kein Rezept geplant</Typography>}
+                        </Typography>
+                    </CardContent>
+                    <CardActions className="cardActions">
+                        <Button
+                            id={`create-recipe-button-${index}`}
+                            sx={{
+                                backgroundColor: 'green',
+                                color: 'white',
+                                textTransform: 'none',
+                                borderRadius: '8px',
+                                padding: '8px 16px'
+                            }}
+                            onClick={() => handleCreateRecipe(day, index)}
+                        >
+                            Rezept erstellen
+                        </Button>
+                        {recipe && (
+                            <Button
+                                id={`open-recipe-button-${index}`}
+                                sx={{
+                                    backgroundColor: 'green',
+                                    color: 'white',
+                                    textTransform: 'none',
+                                    borderRadius: '8px',
+                                    padding: '8px 16px'
+                                }}
+                                onClick={handleOpenInNewTab}
+                            >
+                                Öffnen
+                            </Button>
+                        )}
+                    </CardActions>
+                </Card>
+            );
+        });
     };
 
     return (

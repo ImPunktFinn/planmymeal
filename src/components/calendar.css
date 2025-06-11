@@ -34,15 +34,3 @@
     justify-content: center;
     padding-bottom: 16px;
 }
-
-.createRecipeButton {
-    background-color: green; /* Grüner Hintergrund */
-    color: white; /* Weißer Text */
-    text-transform: none; /* Keine Großbuchstaben */
-    border-radius: 8px; /* Abgerundete Ecken */
-    padding: 8px 16px; /* Innenabstand */
-}
-
-.createRecipeButton:hover {
-    background-color: #45a049; /* Dunkleres Grün beim Hover */
-}
