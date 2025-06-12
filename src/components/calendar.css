@@ -10,9 +10,9 @@
 
 /* Einzelne Karte */
 .calendarCard {
-    width: 300px; /* feste, angenehme Breite */
+    width: 20%;
     border: 1px solid #ddd;
-    border-radius: 16px;
+    border-radius: 25px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.2s ease;
